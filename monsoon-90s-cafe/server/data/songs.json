@@ -1,5 +1,149 @@
 [
   {
+    "id": "tum-se-hi-jab-we-met",
+    "title": "Tum Se Hi",
+    "artist": "Mohit Chauhan • Jab We Met",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "VzLG6OqOcn8",
+    "cover": "https://i.ytimg.com/vi/VzLG6OqOcn8/hq720.jpg"
+  },
+  {
+    "id": "kiska-rasta-dekhe-unplugged",
+    "title": "Kiska Rasta Dekhe (Acoustic)",
+    "artist": "Kishore Kumar • Classic",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "ElZfdU54Cp8",
+    "cover": "https://i.ytimg.com/vi/ElZfdU54Cp8/hq720.jpg"
+  },
+  {
+    "id": "phir-le-aya-dil-barfi",
+    "title": "Phir Le Aya Dil",
+    "artist": "Arijit Singh • Barfi!",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "S3kMn14_Yrs",
+    "cover": "https://i.ytimg.com/vi/S3kMn14_Yrs/hq720.jpg"
+  },
+  {
+    "id": "nazm-nazm-bareilly-ki-barfi",
+    "title": "Nazm Nazm",
+    "artist": "Arko • Bareilly Ki Barfi",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "DK_UsATwoxI",
+    "cover": "https://i.ytimg.com/vi/DK_UsATwoxI/hq720.jpg"
+  },
+  {
+    "id": "manjha-vishal-mishra",
+    "title": "Manjha",
+    "artist": "Vishal Mishra • Acoustic",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "N7BvXrOYQTY",
+    "cover": "https://i.ytimg.com/vi/N7BvXrOYQTY/hq720.jpg"
+  },
+  {
+    "id": "shukran-allah-salim-sulaiman",
+    "title": "Shukran Allah",
+    "artist": "Sonu Nigam, Salim-Sulaiman • Kurbaan",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "Vq-iZG8RUFU",
+    "cover": "https://i.ytimg.com/vi/Vq-iZG8RUFU/hq720.jpg"
+  },
+  {
+    "id": "rangi-saari-indie",
+    "title": "Rangi Saari",
+    "artist": "Kanishk Seth, Kavita Seth",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "BgW8fPL8uDI",
+    "cover": "https://i.ytimg.com/vi/BgW8fPL8uDI/hq720.jpg"
+  },
+  {
+    "id": "o-sanam-lucky-ali",
+    "title": "O Sanam (Sunoh Live)",
+    "artist": "Lucky Ali • Indipop Nostalgia",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "UGxxp5PAmT0",
+    "cover": "https://i.ytimg.com/vi/UGxxp5PAmT0/hq720.jpg"
+  },
+  {
+    "id": "agar-tum-saath-ho-tamasha",
+    "title": "Agar Tum Saath Ho",
+    "artist": "Arijit Singh, Alka Yagnik • Tamasha",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "xRb8hxwN5zc",
+    "cover": "https://i.ytimg.com/vi/xRb8hxwN5zc/hq720.jpg"
+  },
+  {
+    "id": "abhi-na-jao-chhod-kar-acoustic",
+    "title": "Abhi Na Jao Chhod Kar",
+    "artist": "Acoustic Unplugged • Classic",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "mbSWOdeZ2OQ",
+    "cover": "https://i.ytimg.com/vi/mbSWOdeZ2OQ/hq720.jpg"
+  },
+  {
+    "id": "aahatein-indie-acoustic",
+    "title": "Aahatein",
+    "artist": "Agnee • Samyak Prasana",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "LXwU6eljR_k",
+    "cover": "https://i.ytimg.com/vi/LXwU6eljR_k/hq720.jpg"
+  },
+  {
+    "id": "tum-itna-jo-papon",
+    "title": "Tum Itna Jo Muskura Rahe Ho",
+    "artist": "Papon • MTV Unplugged",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "fhKVp1-kJDs",
+    "cover": "https://i.ytimg.com/vi/fhKVp1-kJDs/hq720.jpg"
+  },
+  {
+    "id": "raanjhan-do-patti",
+    "title": "Raanjhan",
+    "artist": "Parampara Tandon, Sachet-Parampara",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "lBvbNxiVmZA",
+    "cover": "https://i.ytimg.com/vi/lBvbNxiVmZA/hq720.jpg"
+  },
+  {
+    "id": "hum-tere-pyar-mein",
+    "title": "Hum Tere Pyar Mein",
+    "artist": "Lata Mangeshkar • Dil Ek Mandir",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "xdZiUuwZeOI",
+    "cover": "https://i.ytimg.com/vi/xdZiUuwZeOI/hq720.jpg"
+  },
+  {
+    "id": "sun-saawariya-indie",
+    "title": "Sun Saawariya",
+    "artist": "Accha Insaan, AtharvaMusic",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "go-j1EpaGVo",
+    "cover": "https://i.ytimg.com/vi/go-j1EpaGVo/hq720.jpg"
+  },
+  {
+    "id": "dil-bechara-khulke-jeene-ka",
+    "title": "Khulke Jeene Ka",
+    "artist": "A.R. Rahman, Arijit Singh • Dil Bechara",
+    "year": "2000s",
+    "mood": "nostalgia",
+    "youtubeId": "PzmNssVLcLQ",
+    "cover": "https://i.ytimg.com/vi/PzmNssVLcLQ/hq720.jpg"
+  },
+  {
     "id": "rimjhim-gire-saawan",
     "title": "Rimjhim Gire Saawan",
     "artist": "Manzil",

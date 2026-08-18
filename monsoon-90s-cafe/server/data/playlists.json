@@ -17,6 +17,31 @@
     ]
   },
   {
+    "id": "20s-hindi-songs",
+    "name": "20s Hindi Melodies",
+    "theme": "2000s Acoustic & Nostalgia Classics",
+    "description": "Soulful modern classics, unplugged melodies & heartwarming 2000s Hindi tunes for rainy days.",
+    "cover": "https://i.ytimg.com/vi/VzLG6OqOcn8/hq720.jpg",
+    "songs": [
+      "tum-se-hi-jab-we-met",
+      "kiska-rasta-dekhe-unplugged",
+      "phir-le-aya-dil-barfi",
+      "nazm-nazm-bareilly-ki-barfi",
+      "manjha-vishal-mishra",
+      "shukran-allah-salim-sulaiman",
+      "rangi-saari-indie",
+      "o-sanam-lucky-ali",
+      "agar-tum-saath-ho-tamasha",
+      "abhi-na-jao-chhod-kar-acoustic",
+      "aahatein-indie-acoustic",
+      "tum-itna-jo-papon",
+      "raanjhan-do-patti",
+      "hum-tere-pyar-mein",
+      "sun-saawariya-indie",
+      "dil-bechara-khulke-jeene-ka"
+    ]
+  },
+  {
     "id": "chai-rain-romance",
     "title": "Chai, Rain & Old Romance",
     "mood": "sad",
