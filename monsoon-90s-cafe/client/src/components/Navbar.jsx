@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Coffee, Music, CloudRain, Info, Radio, Menu, X, Disc } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
+import NaturalRainAmbience from './NaturalRainAmbience';
 
 const Navbar = () => {
   const location = useLocation();
@@ -10,11 +11,11 @@ const Navbar = () => {
   const { currentSong, isPlaying, togglePlay } = useMusicPlayer();
 
   const links = [
-    { path: '/', icon: <Coffee size={18} />, label: 'Kolkata' },
-    { path: '/mumbai', icon: <CloudRain size={18} />, label: 'Mumbai' },
-    { path: '/jukebox', icon: <Music size={18} />, label: 'Jukebox' },
-    { path: '/radio', icon: <Radio size={18} />, label: 'Radio Mode' },
-    { path: '/about', icon: <Info size={18} />, label: 'About' },
+    { path: '/', icon: <Coffee size={15} />, label: 'Kolkata' },
+    { path: '/mumbai', icon: <CloudRain size={15} />, label: 'Mumbai' },
+    { path: '/jukebox', icon: <Music size={15} />, label: 'Jukebox' },
+    { path: '/radio', icon: <Radio size={15} />, label: 'Radio' },
+    { path: '/about', icon: <Info size={15} />, label: 'About' },
   ];
 
   const isActive = (path) => {
@@ -24,39 +25,42 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-40 px-4 py-3 md:px-8 md:py-4 bg-[#080d1a]/85 backdrop-blur-xl border-b border-white/10 shadow-lg">
+      <header className="fixed top-0 left-0 w-full z-40 px-4 py-3 md:px-8 md:py-3.5 bg-[#060911]/90 backdrop-blur-2xl border-b border-white/[0.08]">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center gap-2.5 group focus:outline-none"
+            className="flex items-center gap-3 group focus:outline-none"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#F3C969] to-[#FDE68A] text-[#0b0f19] flex items-center justify-center shadow-[0_0_15px_rgba(243,201,105,0.4)] group-hover:scale-105 transition-transform">
-              <Disc size={20} className={isPlaying ? "animate-spin-slow" : ""} />
+            <div className="w-8 h-8 rounded-lg bg-[#141c2e] border border-white/10 text-[#e2a450] flex items-center justify-center group-hover:border-[#e2a450]/40 transition-colors shadow-md">
+              <Disc size={18} className={isPlaying ? "animate-spin-slow text-[#e2a450]" : "text-[#8492a6]"} />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-vintage font-bold tracking-wider text-[#FFF8EB] group-hover:text-[#F3C969] transition-colors leading-tight">
-                MONSOON 90s
-              </span>
-              <span className="text-[10px] uppercase font-mono tracking-widest text-[#94A3B8] font-semibold">
-                Café Nostalgia
+              <div className="flex items-center gap-1.5">
+                <span className="text-base md:text-lg font-vintage font-bold tracking-tight text-[#f4eee2] group-hover:text-[#e2a450] transition-colors">
+                  Monsoon 90s
+                </span>
+                <span className="text-[9px] font-mono uppercase bg-white/5 text-[#8492a6] px-1.5 py-0.5 rounded border border-white/10">v2.4</span>
+              </div>
+              <span className="text-[10px] uppercase font-mono tracking-widest text-[#8492a6] font-medium">
+                Nostalgia Audio Archive
               </span>
             </div>
           </Link>
 
           {/* Center / Desktop Links */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 bg-[#111728]/80 p-1.5 rounded-full border border-white/10 shadow-inner">
+          <nav className="hidden md:flex items-center space-x-1 bg-[#0e1422] p-1 rounded-full border border-white/[0.08] shadow-inner">
             {links.map((link) => {
               const active = isActive(link.path);
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider font-ui transition-all ${
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono tracking-wide transition-all ${
                     active
-                      ? 'bg-gradient-to-r from-[#F3C969] to-[#FDE68A] text-[#0b0f19] font-bold shadow-[0_0_15px_rgba(243,201,105,0.3)]'
-                      : 'text-[#CBD5E1] hover:text-[#FFF8EB] hover:bg-white/5'
+                      ? 'bg-[#e2a450] text-[#060911] font-bold shadow-md'
+                      : 'text-[#8492a6] hover:text-[#f4eee2] hover:bg-white/5'
                   }`}
                 >
                   {link.icon}
@@ -66,30 +70,17 @@ const Navbar = () => {
             })}
           </nav>
 
-          {/* Right Live Mini Badge & Mobile Menu Button */}
+          {/* Right Live Mini Badge & Ambience Control */}
           <div className="flex items-center gap-3">
-            {currentSong && (
-              <div 
-                onClick={togglePlay}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#172036] border border-[#F3C969]/30 text-xs text-[#FFF8EB] cursor-pointer hover:border-[#F3C969] transition-colors shadow-md"
-                title="Toggle playback"
-              >
-                <div className="flex items-center gap-0.5">
-                  <span className={`w-1 bg-[#F3C969] rounded-full h-3 ${isPlaying ? 'animate-[pulse_0.6s_infinite]' : 'h-1.5'}`}></span>
-                  <span className={`w-1 bg-[#F3C969] rounded-full h-4 ${isPlaying ? 'animate-[pulse_0.8s_infinite_0.2s]' : 'h-1.5'}`}></span>
-                  <span className={`w-1 bg-[#F3C969] rounded-full h-2.5 ${isPlaying ? 'animate-[pulse_0.5s_infinite_0.4s]' : 'h-1.5'}`}></span>
-                </div>
-                <span className="font-medium truncate max-w-[130px]">{currentSong.title}</span>
-              </div>
-            )}
+            <NaturalRainAmbience />
 
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl bg-white/10 text-[#FFF8EB] hover:bg-white/20 transition-colors focus:outline-none"
+              className="md:hidden p-2 rounded-xl bg-white/5 text-[#f4eee2] hover:bg-white/10 transition-colors focus:outline-none border border-white/10"
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>

@@ -1,87 +1,139 @@
 import { useEffect, useRef } from 'react';
 
-const PRESETS = {
-  kolkata: { count: 80, speed: 1.5, angle: 0.1, length: 15, color: 'rgba(165, 167, 176, 0.4)' },
-  mumbai: { count: 150, speed: 3.5, angle: 0.3, length: 25, color: 'rgba(29, 39, 69, 0.6)' },
-  storm: { count: 250, speed: 5, angle: 0.5, length: 30, color: 'rgba(255, 255, 255, 0.5)' },
-  light: { count: 40, speed: 1, angle: 0.05, length: 10, color: 'rgba(245, 233, 208, 0.3)' }
-};
-
-const RainCanvas = ({ preset = 'mumbai' }) => {
+const RainCanvas = ({ intensity = 'medium' }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
-    let raindrops = [];
     let width = window.innerWidth;
     let height = window.innerHeight;
 
-    const settings = PRESETS[preset] || PRESETS.mumbai;
+    let drops = [];
+    let splashes = [];
+
+    const dropCounts = {
+      light: 65,
+      medium: 130,
+      heavy: 240
+    };
+
+    const count = dropCounts[intensity] || 130;
 
     const resize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      initRain();
+      initDrops();
     };
 
-    const initRain = () => {
-      raindrops = [];
-      for (let i = 0; i < settings.count; i++) {
-        raindrops.push({
+    const initDrops = () => {
+      drops = [];
+      splashes = [];
+      for (let i = 0; i < count; i++) {
+        // Layer 0 = background mist, Layer 1 = mid rain, Layer 2 = foreground heavy drop
+        const layer = Math.random() < 0.3 ? 0 : Math.random() < 0.8 ? 1 : 2;
+        drops.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          l: Math.random() * settings.length + 10,
-          xs: Math.random() * 0.5 + settings.angle,
-          ys: Math.random() * 1.5 + settings.speed
+          layer,
+          speed: layer === 0 ? 8 + Math.random() * 4 : layer === 1 ? 16 + Math.random() * 6 : 24 + Math.random() * 8,
+          length: layer === 0 ? 10 + Math.random() * 6 : layer === 1 ? 22 + Math.random() * 10 : 36 + Math.random() * 16,
+          opacity: layer === 0 ? 0.12 : layer === 1 ? 0.28 : 0.45,
+          width: layer === 0 ? 0.75 : layer === 1 ? 1.2 : 1.8,
+          wind: -1.2 + Math.random() * 0.4
         });
       }
     };
 
-    const draw = () => {
+    const createSplash = (x, y) => {
+      if (splashes.length > 40) return;
+      splashes.push({
+        x,
+        y,
+        radius: 1,
+        maxRadius: 4 + Math.random() * 8,
+        opacity: 0.35
+      });
+    };
+
+    let windTime = 0;
+
+    const render = () => {
       ctx.clearRect(0, 0, width, height);
-      ctx.strokeStyle = settings.color;
-      ctx.lineWidth = 1;
-      ctx.lineCap = 'round';
-      
-      ctx.beginPath();
-      for (let i = 0; i < raindrops.length; i++) {
-        const drop = raindrops[i];
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x + drop.l * drop.xs, drop.y + drop.l * drop.ys);
+
+      windTime += 0.01;
+      const currentWind = Math.sin(windTime) * 0.8 - 0.8;
+
+      // Draw Drops
+      for (let i = 0; i < drops.length; i++) {
+        const d = drops[i];
         
-        drop.x += drop.xs * 5;
-        drop.y += drop.ys * 5;
-        
-        if (drop.x > width || drop.y > height) {
-          drop.x = Math.random() * width;
-          drop.y = -20;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(215, 230, 255, ${d.opacity})`;
+        ctx.lineWidth = d.width;
+        ctx.lineCap = 'round';
+
+        const tailX = d.x - currentWind * (d.length * 0.2);
+        const tailY = d.y - d.length;
+
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.stroke();
+
+        d.y += d.speed;
+        d.x += currentWind * (d.speed * 0.18);
+
+        // Ground splash trigger
+        if (d.y > height - 10) {
+          if (d.layer >= 1 && Math.random() < 0.25) {
+            createSplash(d.x, height - 6);
+          }
+          d.y = -20 - Math.random() * 30;
+          d.x = Math.random() * (width + 200) - 100;
         }
       }
-      ctx.stroke();
-      
-      animationFrameId = requestAnimationFrame(draw);
+
+      // Draw Splashes
+      for (let i = splashes.length - 1; i >= 0; i--) {
+        const s = splashes[i];
+        ctx.beginPath();
+        ctx.ellipse(s.x, s.y, s.radius * 2, s.radius * 0.7, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(215, 230, 255, ${s.opacity})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        s.radius += 0.4;
+        s.opacity -= 0.025;
+
+        if (s.opacity <= 0 || s.radius >= s.maxRadius) {
+          splashes.splice(i, 1);
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
     };
 
     window.addEventListener('resize', resize);
     resize();
-    draw();
+    render();
 
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [preset]);
+  }, [intensity]);
 
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed inset-0 w-full h-full pointer-events-none z-10 opacity-70 mix-blend-screen"
+      className="fixed inset-0 w-full h-full pointer-events-none z-10 opacity-75"
     />
   );
 };
 
 export default RainCanvas;
+
