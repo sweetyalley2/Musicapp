@@ -303,14 +303,6 @@ const MusicPlayer = () => {
             </button>
           </div>
         </div>
-
-        {/* Error notification if audio fails */}
-        {error && (
-          <div className="max-w-md mx-auto mt-1 flex items-center justify-center gap-1.5 text-xs text-[#F87171] font-medium">
-            <AlertCircle size={12} />
-            <span>{error}</span>
-          </div>
-        )}
       </div>
 
       {/* ============================================================ */}

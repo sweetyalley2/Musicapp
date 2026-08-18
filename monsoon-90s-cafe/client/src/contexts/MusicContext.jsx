@@ -70,7 +70,7 @@ export const MusicProvider = ({ children }) => {
   }, [isPlaying]);
 
   // Main playSong method
-  const playSong = async (song, newPlaylist = null) => {
+  const playSong = (song, newPlaylist = null) => {
     if (!song) return;
     if (newPlaylist && Array.isArray(newPlaylist) && newPlaylist.length > 0) {
       setPlaylist(newPlaylist);
@@ -82,15 +82,10 @@ export const MusicProvider = ({ children }) => {
     if (currentSong && currentSong.id === song.id && player) {
       try {
         if (isPlaying) {
-          if (typeof player.pauseVideo === 'function') await player.pauseVideo();
+          if (typeof player.pauseVideo === 'function') player.pauseVideo();
           setIsPlaying(false);
         } else {
-          if (!song.youtubeId) {
-            setError("Audio unavailable for this track");
-            setIsPlaying(false);
-            return;
-          }
-          if (typeof player.playVideo === 'function') await player.playVideo();
+          if (typeof player.playVideo === 'function') player.playVideo();
           setIsPlaying(true);
         }
       } catch (e) {
@@ -106,35 +101,28 @@ export const MusicProvider = ({ children }) => {
     setError(null);
 
     if (!song.youtubeId) {
-      setError("Audio source unavailable");
-      setIsPlaying(false);
       return;
     }
 
     if (player) {
       try {
         if (typeof player.loadVideoById === 'function') {
-          await player.loadVideoById({
-            videoId: song.youtubeId,
-            startSeconds: 0
-          });
+          player.loadVideoById(song.youtubeId, 0);
+        } else if (typeof player.cueVideoById === 'function') {
+          player.cueVideoById(song.youtubeId, 0);
+          if (typeof player.playVideo === 'function') player.playVideo();
         }
-        await applyVolume(volume, isMuted);
-        if (typeof player.playVideo === 'function') {
-          await player.playVideo();
-        }
+        applyVolume(volume, isMuted);
         setIsPlaying(true);
       } catch (e) {
-        // Fallback simple load
         try {
-          if (typeof player.loadVideoById === 'function') {
-            player.loadVideoById(song.youtubeId);
-            player.playVideo();
+          if (typeof player.cueVideoById === 'function') {
+            player.cueVideoById(song.youtubeId, 0);
+            if (typeof player.playVideo === 'function') player.playVideo();
             setIsPlaying(true);
           }
         } catch (err2) {
-          setError("Failed to load audio");
-          setIsPlaying(false);
+          playNext();
         }
       }
     } else {
@@ -143,7 +131,7 @@ export const MusicProvider = ({ children }) => {
     }
   };
 
-  const togglePlay = async () => {
+  const togglePlay = () => {
     if (!currentSong) {
       if (playlist.length > 0) {
         playSong(playlist[0]);
@@ -159,10 +147,10 @@ export const MusicProvider = ({ children }) => {
 
     try {
       if (isPlaying) {
-        if (typeof player.pauseVideo === 'function') await player.pauseVideo();
+        if (typeof player.pauseVideo === 'function') player.pauseVideo();
         setIsPlaying(false);
       } else {
-        if (typeof player.playVideo === 'function') await player.playVideo();
+        if (typeof player.playVideo === 'function') player.playVideo();
         setIsPlaying(true);
       }
     } catch (e) {
@@ -313,12 +301,8 @@ export const MusicProvider = ({ children }) => {
 
   const onPlayerError = (event) => {
     // 2: invalid parameter, 5: html5 error, 100: not found, 101/150: restricted embed
-    if (event.data === 101 || event.data === 150) {
-      // restricted embed, auto advance
-      playNext();
-    } else {
-      setError("Audio stream connecting...");
-    }
+    // Auto advance smoothly without displaying jarring errors
+    playNext();
   };
 
   const contextValue = {
