@@ -349,21 +349,26 @@ export const MusicProvider = ({ children }) => {
   const opts = {
     height: '160',
     width: '160',
+    host: 'https://www.youtube-nocookie.com',
     playerVars: {
-      autoplay: 0,
+      autoplay: 1,
       controls: 0,
       disablekb: 1,
       fs: 0,
       playsinline: 1,
       modestbranding: 1,
-      rel: 0
+      rel: 0,
+      iv_load_policy: 3,
+      cc_load_policy: 0,
+      origin: typeof window !== 'undefined' ? window.location.origin : '',
+      widget_referrer: typeof window !== 'undefined' ? window.location.origin : ''
     },
   };
 
   return (
     <MusicContext.Provider value={contextValue}>
       {children}
-      {/* Hidden YouTube iframe for pure audio streaming, sized to prevent browser suspension */}
+      {/* Privacy-Enhanced No-Cookie YouTube stream to prevent ads & tracking */}
       <div 
         aria-hidden="true" 
         style={{ 
@@ -390,4 +395,5 @@ export const MusicProvider = ({ children }) => {
     </MusicContext.Provider>
   );
 };
+
 
