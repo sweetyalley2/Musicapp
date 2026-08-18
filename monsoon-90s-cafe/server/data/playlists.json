@@ -1,0 +1,141 @@
+[
+  {
+    "id": "first-drops",
+    "title": "The First Drops",
+    "mood": "rain",
+    "songs": [
+      "rimjhim-gire-saawan",
+      "o-sajna-barkha-bahar-aayi",
+      "pyaar-hua-iqraar-hua",
+      "ek-ladki-bheegi-bhaagi-si",
+      "saawan-ka-mahina",
+      "ab-ke-sajan-saawan-mein",
+      "rimjhim-ke-geet-saawan-gaaye",
+      "zindagi-kaisi-hai-paheli",
+      "kahin-door-jab-din-dhal-jaye",
+      "yeh-shaam-mastani"
+    ]
+  },
+  {
+    "id": "chai-rain-romance",
+    "title": "Chai, Rain & Old Romance",
+    "mood": "sad",
+    "songs": [
+      "lag-ja-gale",
+      "pal-pal-dil-ke-paas",
+      "o-mere-dil-ke-chain",
+      "aap-ki-aankhon-mein-kuch",
+      "chura-liya-hai-tumne",
+      "gulabi-aankhen",
+      "humein-tumse-pyaar-kitna",
+      "tere-bina-zindagi-se",
+      "ek-ajnabee-haseena-se",
+      "neele-neele-ambar-par"
+    ]
+  },
+  {
+    "id": "monsoon-romance",
+    "title": "Monsoon Romance",
+    "mood": "love",
+    "songs": [
+      "bheegi-bheegi-raaton-mein",
+      "lagi-aaj-sawan-ki",
+      "megha-re-megha",
+      "kate-nahin-kat-te",
+      "koi-ladki-hai",
+      "pehla-nasha",
+      "tu-hi-re",
+      "ek-ladki-ko-dekha",
+      "do-dil-mil-rahe-hain",
+      "aankhon-se-tune-kya"
+    ]
+  },
+  {
+    "id": "kolkata-streets",
+    "title": "Kolkata Streets",
+    "mood": "roadtrip",
+    "songs": [
+      "zara-zara",
+      "tu-mile-dil-khile",
+      "woh-pehli-baar",
+      "hoshwalon-ko-khabar-kya",
+      "aao-na",
+      "tum-se-hi",
+      "ajab-si",
+      "aankhon-mein-teri",
+      "kya-mujhe-pyaar-hai",
+      "tera-hone-laga-hoon"
+    ]
+  },
+  {
+    "id": "late-night-rain",
+    "title": "Late-Night Rain",
+    "mood": "sad",
+    "songs": [
+      "iktara",
+      "saibo",
+      "pee-loon",
+      "phir-le-aaya-dil",
+      "tum-ho",
+      "main-rang-sharbaton-ka",
+      "kabira",
+      "tum-tak",
+      "aaj-jaane-ki-zid-na-karo",
+      "baarishein"
+    ]
+  },
+  {
+    "id": "gaana-rainy-day",
+    "title": "Songs for Rainy Day (Gaana)",
+    "mood": "rain",
+    "songs": [
+      "kabhi-jo-baadal-barse-gaana",
+      "dil-kyun-yeh-mera-gaana",
+      "bhage-re-mann-gaana",
+      "sawan-aaya-hai-gaana",
+      "hum-tum-gaana",
+      "deewana-kar-raha-hai-gaana",
+      "kaisi-hai-ye-rut-gaana",
+      "katra-katra-gaana",
+      "pehli-baar-mohabbat-gaana",
+      "zara-zara-gaana",
+      "baarish-yaariyan-gaana",
+      "tere-bin-gaana",
+      "boond-boond-gaana",
+      "tum-hi-ho-gaana",
+      "tum-se-hi-gaana",
+      "pee-loon-gaana",
+      "janib-duet-gaana",
+      "te-amo-duet-gaana",
+      "rabba-main-toh-mar-gaya-oye-version-2-gaana",
+      "aye-udi-udi-udi-gaana"
+    ]
+  },
+  {
+    "id": "all-out-2000s-hits",
+    "title": "All out 2000's Hits",
+    "mood": "party",
+    "songs": [
+      "just-dance-lady-gaga",
+      "low-flo-rida",
+      "love-generation-bob-sinclar",
+      "toxic-britney-spears",
+      "hips-don-t-lie-shakira",
+      "crazy-in-love-beyonce",
+      "yeah-usher",
+      "lose-yourself-eminem",
+      "mr-brightside-the-killers",
+      "hey-ya-outkast",
+      "complicated-avril-lavigne",
+      "oops-i-did-it-again-britney-spears",
+      "bye-bye-bye-nsync",
+      "in-the-end-linkin-park",
+      "it-s-my-life-bon-jovi",
+      "yellow-coldplay",
+      "viva-la-vida-coldplay",
+      "bad-romance-lady-gaga",
+      "i-gotta-feeling-black-eyed-peas",
+      "cry-me-a-river-justin-timberlake"
+    ]
+  }
+]

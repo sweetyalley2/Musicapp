@@ -1,0 +1,9 @@
+{
+  "name": "monsoon-90s-cafe-root",
+  "version": "1.0.0",
+  "description": "Root package for running Monsoon 90s Cafe",
+  "scripts": {
+    "dev": "cd monsoon-90s-cafe/server && start npm run dev && cd ../client && npm run dev",
+    "install-all": "cd monsoon-90s-cafe/server && npm install && cd ../client && npm install"
+  }
+}

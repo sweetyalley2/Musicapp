@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #101326;
+  --color-navy-800: #1D2745;
+  --color-cafe-900: #3D2B28;
+  --color-gold: #E5B94D;
+  --color-cream: #F5E9D0;
+  --color-monsoon: #A5A7B0;
+  --color-neonred: #C95C54;
+  
+  --font-vintage: "Playfair Display", serif;
+  --font-ui: "Inter", sans-serif;
+  
+  --animate-grain: grain 8s steps(10) infinite;
+  --animate-spin-slow: spin-slow 10s linear infinite;
+  
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -10%); }
+    20% { transform: translate(-15%, 5%); }
+    30% { transform: translate(7%, -25%); }
+    40% { transform: translate(-5%, 25%); }
+    50% { transform: translate(-15%, 10%); }
+    60% { transform: translate(15%, 0%); }
+    70% { transform: translate(0%, 15%); }
+    80% { transform: translate(3%, 35%); }
+    90% { transform: translate(-10%, 10%); }
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-navy-900 text-cream font-ui overflow-x-hidden m-0 p-0 selection:bg-gold selection:text-navy-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-vintage font-normal;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-cafe-900/40 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+  
+  .glass-panel {
+    @apply bg-navy-800/40 backdrop-blur-lg border border-white/5;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px rgba(229, 185, 77, 0.5);
+  }
+}
+
+/* Film grain overlay */
+.film-grain {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200vh;
+  background: transparent url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E') repeat;
+  pointer-events: none;
+  z-index: 50;
+  animation: grain 8s steps(10) infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101326;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3D2B28;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E5B94D;
+}
