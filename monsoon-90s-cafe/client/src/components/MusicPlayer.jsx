@@ -14,7 +14,9 @@ import {
   ChevronUp, 
   ChevronDown, 
   Radio, 
-  Disc 
+  Disc,
+  Tv,
+  Maximize2
 } from 'lucide-react';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 
@@ -36,6 +38,7 @@ const MusicPlayer = () => {
     isMuted,
     isShuffle,
     repeatMode,
+    isVideoOpen,
     togglePlay,
     playNext,
     playPrevious,
@@ -43,7 +46,9 @@ const MusicPlayer = () => {
     toggleMute,
     toggleShuffle,
     toggleRepeat,
-    seekTo
+    seekTo,
+    openVideoMode,
+    toggleVideoMode
   } = useMusicPlayer();
 
   const [isExpandedMobile, setIsExpandedMobile] = useState(false);
@@ -232,8 +237,21 @@ const MusicPlayer = () => {
             </div>
           </div>
 
-          {/* RIGHT: Volume Deck */}
+          {/* RIGHT: Volume Deck & Fullscreen Video Toggle */}
           <div className="hidden lg:flex items-center justify-end gap-3 w-72">
+            <button
+              onClick={toggleVideoMode}
+              title="Watch Fullscreen 90s Video (F)"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-mono font-semibold transition-all shadow-sm cursor-pointer ${
+                isVideoOpen
+                  ? 'bg-[#e2a450] text-[#060911] border-[#e2a450]'
+                  : 'bg-[#141c2e] hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] border-white/10'
+              }`}
+            >
+              <Tv size={14} />
+              <span>Full Video</span>
+            </button>
+
             <div className="flex items-center gap-2 bg-[#0e1422] px-3 py-1 rounded-full border border-white/[0.08]">
               <button 
                 onClick={toggleMute} 
@@ -264,6 +282,16 @@ const MusicPlayer = () => {
 
           {/* MOBILE RIGHT CONTROLS */}
           <div className="flex md:hidden items-center gap-1 flex-shrink-0">
+            <button
+              onClick={toggleVideoMode}
+              className={`p-1.5 rounded-lg transition-colors ${
+                isVideoOpen ? 'text-[#e2a450] bg-[#e2a450]/20' : 'text-[#e2a450] hover:text-[#f4eee2]'
+              }`}
+              title="Fullscreen Video"
+            >
+              <Tv size={16} />
+            </button>
+
             <button 
               onClick={playPrevious}
               className="p-1.5 text-[#8492a6] hover:text-[#f4eee2] transition-colors"
@@ -353,6 +381,18 @@ const MusicPlayer = () => {
 
             {/* Timeline & Controls */}
             <div className="w-full space-y-5">
+              {/* Watch Fullscreen Video Button */}
+              <button
+                onClick={() => {
+                  setIsExpandedMobile(false);
+                  openVideoMode();
+                }}
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#e2a450] to-[#f5c26b] text-[#060911] font-bold text-sm shadow-lg active:scale-95 transition-transform cursor-pointer"
+              >
+                <Tv size={18} />
+                <span>Watch Fullscreen 90s Video</span>
+              </button>
+
               {/* Progress Slider */}
               <div className="w-full space-y-1.5">
                 <div className="relative flex items-center">

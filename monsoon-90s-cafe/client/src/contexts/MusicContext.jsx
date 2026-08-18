@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useRef, useCallback } from 'react';
 import YouTube from 'react-youtube';
 import { fallbackSongs } from '../data/fallbackSongs';
+import RetroCinemaVideo from '../components/RetroCinemaVideo';
 
 export const MusicContext = createContext();
 
@@ -18,6 +19,8 @@ export const MusicProvider = ({ children }) => {
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState('all'); // 'off', 'all', 'one'
   const [isPlayerReady, setIsPlayerReady] = useState(false);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const playerRef = useRef(null);
   const playerInstanceRef = useRef(null);
@@ -44,7 +47,7 @@ export const MusicProvider = ({ children }) => {
     }
   }, []);
 
-  // Update progress every 350ms when playing
+  // Update progress every 350ms when playing & auto-skip any pre-roll ads
   useEffect(() => {
     let progressInterval;
     if (isPlaying && !isSeekingRef.current) {
@@ -52,6 +55,17 @@ export const MusicProvider = ({ children }) => {
         const player = getPlayer();
         if (!player) return;
         try {
+          // Detect & skip YouTube pre-roll ads automatically
+          if (typeof player.getVideoData === 'function') {
+            const vData = player.getVideoData();
+            if (vData && (vData.isAd || (vData.title && vData.title.toLowerCase().includes('ad')))) {
+              if (typeof player.seekTo === 'function' && typeof player.getDuration === 'function') {
+                const adDur = await player.getDuration();
+                if (adDur && adDur > 0) player.seekTo(adDur, true);
+              }
+            }
+          }
+
           if (typeof player.getCurrentTime === 'function' && typeof player.getDuration === 'function') {
             const cur = await player.getCurrentTime();
             const dur = await player.getDuration();
@@ -107,9 +121,16 @@ export const MusicProvider = ({ children }) => {
     if (player) {
       try {
         if (typeof player.loadVideoById === 'function') {
-          player.loadVideoById(song.youtubeId, 0);
+          try {
+            player.loadVideoById({
+              videoId: song.youtubeId,
+              startSeconds: 0.01
+            });
+          } catch (errLoad) {
+            player.loadVideoById(song.youtubeId, 0.01);
+          }
         } else if (typeof player.cueVideoById === 'function') {
-          player.cueVideoById(song.youtubeId, 0);
+          player.cueVideoById(song.youtubeId, 0.01);
           if (typeof player.playVideo === 'function') player.playVideo();
         }
         applyVolume(volume, isMuted);
@@ -117,7 +138,7 @@ export const MusicProvider = ({ children }) => {
       } catch (e) {
         try {
           if (typeof player.cueVideoById === 'function') {
-            player.cueVideoById(song.youtubeId, 0);
+            player.cueVideoById(song.youtubeId, 0.01);
             if (typeof player.playVideo === 'function') player.playVideo();
             setIsPlaying(true);
           }
@@ -270,6 +291,56 @@ export const MusicProvider = ({ children }) => {
     setIsPlaying(false);
   };
 
+  const openVideoMode = () => setIsVideoOpen(true);
+  const closeVideoMode = () => setIsVideoOpen(false);
+  const toggleVideoMode = () => setIsVideoOpen(prev => !prev);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.warn('Fullscreen request failed:', err);
+    }
+  };
+
+  // Keyboard shortcuts and Fullscreen state synchronizer
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+    const handleKeyDown = (e) => {
+      // Don't trigger if user is typing in a search bar or text input
+      if (['INPUT', 'TEXTAREA'].includes(e.target?.tagName)) return;
+
+      if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        setIsVideoOpen(prev => !prev);
+      } else if (e.key === 'Escape' && isVideoOpen) {
+        setIsVideoOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isVideoOpen]);
+
   const onPlayerReady = (event) => {
     playerInstanceRef.current = event.target;
     setIsPlayerReady(true);
@@ -318,6 +389,8 @@ export const MusicProvider = ({ children }) => {
     isShuffle,
     repeatMode,
     isPlayerReady,
+    isVideoOpen,
+    isFullscreen,
     playSong,
     playNext,
     playPrevious,
@@ -327,18 +400,22 @@ export const MusicProvider = ({ children }) => {
     toggleShuffle,
     toggleRepeat,
     closePlayer,
-    seekTo
+    seekTo,
+    openVideoMode,
+    closeVideoMode,
+    toggleVideoMode,
+    toggleFullscreen
   };
 
   const opts = {
-    height: '160',
-    width: '160',
+    height: '100%',
+    width: '100%',
     host: 'https://www.youtube-nocookie.com',
     playerVars: {
       autoplay: 1,
       controls: 0,
-      disablekb: 1,
-      fs: 0,
+      disablekb: 0,
+      fs: 1,
       playsinline: 1,
       modestbranding: 1,
       rel: 0,
@@ -352,29 +429,37 @@ export const MusicProvider = ({ children }) => {
   return (
     <MusicContext.Provider value={contextValue}>
       {children}
-      {/* Privacy-Enhanced No-Cookie YouTube stream to prevent ads & tracking */}
+
+      {/* Fullscreen Retro Cinema Video Overlay Modal */}
+      {isVideoOpen && <RetroCinemaVideo />}
+
+      {/* Persistent YouTube Player Container - Stays mounted to prevent track restarts */}
       <div 
-        aria-hidden="true" 
-        style={{ 
-          position: 'fixed', 
-          bottom: 0, 
-          right: 0, 
-          width: '160px', 
-          height: '160px', 
-          opacity: 0.001, 
-          pointerEvents: 'none',
-          zIndex: -1,
-          overflow: 'hidden'
-        }}
+        aria-hidden={!isVideoOpen} 
+        className={
+          isVideoOpen
+            ? "fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none p-3 sm:p-6 md:p-10"
+            : "fixed bottom-0 right-0 w-[1px] h-[1px] opacity-[0.001] pointer-events-none -z-50 overflow-hidden"
+        }
       >
-        <YouTube
-          videoId={currentSong?.youtubeId || "kAU8_00hAhs"}
-          opts={opts}
-          onReady={onPlayerReady}
-          onStateChange={onPlayerStateChange}
-          onError={onPlayerError}
-          ref={playerRef}
-        />
+        <div 
+          className={
+            isVideoOpen
+              ? "w-full max-w-5xl aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)] border-2 sm:border-4 border-white/10 bg-black pointer-events-auto relative flex items-center justify-center"
+              : "w-full h-full"
+          }
+        >
+          <YouTube
+            videoId={currentSong?.youtubeId || "kAU8_00hAhs"}
+            opts={opts}
+            onReady={onPlayerReady}
+            onStateChange={onPlayerStateChange}
+            onError={onPlayerError}
+            ref={playerRef}
+            className="w-full h-full"
+            iframeClassName="w-full h-full"
+          />
+        </div>
       </div>
     </MusicContext.Provider>
   );

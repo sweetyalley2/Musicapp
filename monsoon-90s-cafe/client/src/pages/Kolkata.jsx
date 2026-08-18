@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Coffee, Radio as RadioIcon, Music, Play, Pause, Search, Sparkles, Disc } from 'lucide-react';
+import { Coffee, Radio as RadioIcon, Music, Play, Pause, Search, Sparkles, Disc, Tv } from 'lucide-react';
 import InteractiveRainGlass from '../components/InteractiveRainGlass';
 import RadioDial from '../components/RadioDial';
 import CassetteCard from '../components/CassetteCard';
@@ -9,12 +9,12 @@ import { fallbackPlaylists, fallbackSongs } from '../data/fallbackSongs';
 import { sfx } from '../utils/soundEffects';
 
 const Kolkata = () => {
-  const { playSong, currentSong, isPlaying } = useMusicPlayer();
+  const { playSong, currentSong, isPlaying, openVideoMode } = useMusicPlayer();
   const [playlists, setPlaylists] = useState(fallbackPlaylists);
   const [activePlaylistId, setActivePlaylistId] = useState(fallbackPlaylists[0]?.id || null);
   const [activeSongs, setActiveSongs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const quotes = [
     "Some things never change, like the rhythm of rain on Howrah Bridge and steaming roadside tea.",
     "A yellow taxi splashes by College Street, carrying stories of a hundred monsoons.",
@@ -32,7 +32,7 @@ const Kolkata = () => {
           setPlaylists(data);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Update active songs when active playlist changes
@@ -78,13 +78,13 @@ const Kolkata = () => {
     }
   };
 
-  const displayedSongs = activeSongs.filter(s => 
-    s.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const displayedSongs = activeSongs.filter(s =>
+    s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     s.artist.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -93,9 +93,9 @@ const Kolkata = () => {
     >
       {/* Background Image with Cinematic Matte Finish */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <img 
-          src="/bg-kolkata-rain.jpg" 
-          alt="Kolkata Monsoon Rain" 
+        <img
+          src="/bg-kolkata-rain.jpg"
+          alt="Kolkata Monsoon Rain"
           className="w-full h-full object-cover opacity-45 filter brightness-[0.68] contrast-110 scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#060911]/85 via-[#060911]/60 to-[#060911]/95"></div>
@@ -104,7 +104,7 @@ const Kolkata = () => {
       <InteractiveRainGlass intensity="medium" />
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-between">
-        
+
         {/* Editorial Page Header */}
         <header className="mb-6 md:mb-10">
           <div className="inline-flex items-center gap-2 bg-[#141c2e]/90 text-[#e2a450] px-3 py-1 rounded-full border border-white/10 text-[11px] font-mono font-semibold uppercase tracking-wider mb-2 shadow-sm">
@@ -121,10 +121,10 @@ const Kolkata = () => {
 
         {/* Main 2-Column Responsive Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-          
+
           {/* Left Column: Handcrafted Analog Radio & Nostalgia Memory */}
           <div className="lg:col-span-4 flex flex-col gap-5">
-            
+
             {/* Analog Radio Receiver Card */}
             <div className="craft-panel p-5 rounded-2xl border border-white/10 shadow-2xl flex flex-col items-center">
               <div className="w-full flex items-center justify-between pb-3 mb-3 border-b border-white/[0.07]">
@@ -136,13 +136,13 @@ const Kolkata = () => {
                 </div>
                 <span className="text-[10px] font-mono text-[#8492a6]">FM / MW</span>
               </div>
-              
-              <RadioDial 
-                onTune={handleTune} 
+
+              <RadioDial
+                onTune={handleTune}
                 currentFrequency={RADIO_STATIONS[stationIndex].freq}
                 isPlaying={isPlaying}
               />
-              
+
               <div className="mt-3 w-full flex items-center justify-between bg-[#060911] p-2.5 rounded-xl border border-white/[0.08]">
                 <div className="min-w-0 pr-2">
                   <span className="text-[10px] font-mono text-[#e2a450] font-semibold block">
@@ -156,17 +156,28 @@ const Kolkata = () => {
                     <span className="text-[10px] text-[#8492a6] font-mono">Tuner Ready</span>
                   )}
                 </div>
-                <button 
-                  onClick={handleTune}
-                  className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider bg-[#141c2e] hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] rounded-lg border border-white/10 transition-colors flex-shrink-0"
-                >
-                  Tune
-                </button>
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  {isPlaying && (
+                    <button
+                      onClick={openVideoMode}
+                      title="Watch Fullscreen Video (F)"
+                      className="p-1.5 rounded-lg bg-[#141c2e] hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] border border-white/10 transition-colors cursor-pointer"
+                    >
+                      <Tv size={13} />
+                    </button>
+                  )}
+                  <button
+                    onClick={handleTune}
+                    className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider bg-[#141c2e] hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] rounded-lg border border-white/10 transition-colors cursor-pointer"
+                  >
+                    Tune
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* Nostalgia Quote Card */}
-            <motion.div 
+            <motion.div
               whileHover={{ y: -2 }}
               onClick={handleChaiClick}
               className="craft-card p-5 rounded-2xl cursor-pointer select-none group border border-white/10 shadow-xl"
@@ -180,7 +191,7 @@ const Kolkata = () => {
                   Tap for next
                 </span>
               </div>
-              
+
               <p className="font-vintage text-[#f4eee2] text-sm sm:text-base italic leading-relaxed pt-1">
                 "{quotes[currentQuote]}"
               </p>
@@ -189,7 +200,7 @@ const Kolkata = () => {
 
           {/* Right Column: Cassette Rack & Track Directory */}
           <div className="lg:col-span-8 flex flex-col gap-5">
-            
+
             {/* Cassette Deck Shelf */}
             <div className="craft-panel p-5 md:p-6 rounded-2xl shadow-2xl border border-white/10">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.08]">
@@ -233,7 +244,7 @@ const Kolkata = () => {
                 {/* Track Search Filter */}
                 <div className="relative w-full sm:w-56">
                   <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#8492a6]" />
-                  <input 
+                  <input
                     type="text"
                     placeholder="Search song or artist..."
                     value={searchQuery}
@@ -253,17 +264,16 @@ const Kolkata = () => {
                     <div
                       key={song.id}
                       onClick={() => playSong(song, activeSongs)}
-                      className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all border ${
-                        isSelected
-                          ? 'bg-[#182030] border-[#e2a450] shadow-md'
-                          : 'bg-white/[0.02] hover:bg-white/[0.06] border-transparent'
-                      }`}
+                      className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all border ${isSelected
+                        ? 'bg-[#182030] border-[#e2a450] shadow-md'
+                        : 'bg-white/[0.02] hover:bg-white/[0.06] border-transparent'
+                        }`}
                     >
                       <div className="flex items-center gap-3 min-w-0 pr-2">
                         <span className="text-xs font-mono text-[#8492a6] w-5 text-center flex-shrink-0 font-medium">
                           {index + 1}
                         </span>
-                        
+
                         <div className="min-w-0">
                           <h4 className={`text-xs sm:text-sm font-semibold truncate ${isSelected ? 'text-[#e2a450]' : 'text-[#f4eee2]'}`}>
                             {song.title}
@@ -274,12 +284,24 @@ const Kolkata = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 flex-shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {isThisPlaying ? (
-                          <div className="flex items-center gap-1 bg-[#e2a450]/20 text-[#e2a450] px-2 py-0.5 rounded text-[10px] font-mono font-bold">
-                            <span className="w-1 h-3 bg-[#e2a450] animate-pulse"></span>
-                            <span>Playing</span>
-                          </div>
+                          <>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openVideoMode();
+                              }}
+                              title="Watch Fullscreen Video (F)"
+                              className="p-1 rounded bg-[#e2a450]/20 hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] transition-colors cursor-pointer"
+                            >
+                              <Tv size={13} />
+                            </button>
+                            <div className="flex items-center gap-1 bg-[#e2a450]/20 text-[#e2a450] px-2 py-0.5 rounded text-[10px] font-mono font-bold">
+                              <span className="w-1 h-3 bg-[#e2a450] animate-pulse"></span>
+                              <span>Playing</span>
+                            </div>
+                          </>
                         ) : (
                           <div className="w-7 h-7 rounded-lg bg-white/5 hover:bg-[#e2a450] text-[#8492a6] hover:text-[#060911] flex items-center justify-center transition-colors">
                             <Play size={12} fill="currentColor" className="ml-0.5" />

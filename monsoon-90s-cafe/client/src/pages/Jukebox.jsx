@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
-import { Search, Play, Pause, Disc, Filter, X, Music } from 'lucide-react';
+import { Search, Play, Pause, Disc, Filter, X, Music, Tv } from 'lucide-react';
 import InteractiveRainGlass from '../components/InteractiveRainGlass';
 import { fallbackSongs } from '../data/fallbackSongs';
 
@@ -9,7 +9,7 @@ const Jukebox = () => {
   const [songs, setSongs] = useState(fallbackSongs);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMood, setSelectedMood] = useState('all');
-  const { playSong, currentSong, isPlaying, togglePlay } = useMusicPlayer();
+  const { playSong, currentSong, isPlaying, togglePlay, openVideoMode } = useMusicPlayer();
 
   useEffect(() => {
     fetch('http://localhost:5000/api/songs')
@@ -206,12 +206,24 @@ const Jukebox = () => {
                       </p>
                     </div>
 
-                    {/* Right Playing Indicator */}
-                    <div className="flex-shrink-0">
+                    {/* Right Playing Indicator & Video Button */}
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
                       {isThisPlaying ? (
-                        <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#e2a450]/20 text-[#e2a450] text-[10px] font-mono font-bold">
-                          <span>Playing</span>
-                        </div>
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideoMode();
+                            }}
+                            title="Watch Fullscreen Video (F)"
+                            className="p-1 rounded bg-[#e2a450]/20 hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] transition-colors cursor-pointer"
+                          >
+                            <Tv size={12} />
+                          </button>
+                          <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#e2a450]/20 text-[#e2a450] text-[10px] font-mono font-bold">
+                            <span>Playing</span>
+                          </div>
+                        </>
                       ) : (
                         <div className="w-6 h-6 rounded-lg bg-white/5 text-[#8492a6] group-hover:text-[#f4eee2] flex items-center justify-center transition-colors">
                           <Play size={10} fill="currentColor" className="ml-0.5" />

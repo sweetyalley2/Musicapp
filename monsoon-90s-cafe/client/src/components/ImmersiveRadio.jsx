@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SkipForward, SkipBack, Play, Pause, Disc, ListMusic, Radio, Volume2 } from 'lucide-react';
+import { SkipForward, SkipBack, Play, Pause, Disc, ListMusic, Radio, Volume2, Tv } from 'lucide-react';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { fallbackPlaylists, fallbackSongs } from '../data/fallbackSongs';
 import { formatTime } from './MusicPlayer';
@@ -21,7 +21,8 @@ const ImmersiveRadio = () => {
     playNext, 
     playPrevious, 
     playSong,
-    seekTo 
+    seekTo,
+    openVideoMode
   } = useMusicPlayer();
 
   useEffect(() => {
@@ -166,7 +167,7 @@ const ImmersiveRadio = () => {
           <div className="flex items-center justify-center gap-5 pt-1">
             <button 
               onClick={playPrevious}
-              className="p-1.5 text-[#8492a6] hover:text-[#e2a450] hover:scale-105 active:scale-95 transition-all"
+              className="p-1.5 text-[#8492a6] hover:text-[#e2a450] hover:scale-105 active:scale-95 transition-all cursor-pointer"
               title="Previous Track"
             >
               <SkipBack size={20} fill="currentColor" />
@@ -174,7 +175,7 @@ const ImmersiveRadio = () => {
 
             <button 
               onClick={togglePlay}
-              className="w-12 h-12 rounded-full bg-[#e2a450] text-[#060911] flex items-center justify-center shadow-lg hover:bg-[#f5c26b] hover:scale-105 active:scale-95 transition-all"
+              className="w-12 h-12 rounded-full bg-[#e2a450] text-[#060911] flex items-center justify-center shadow-lg hover:bg-[#f5c26b] hover:scale-105 active:scale-95 transition-all cursor-pointer"
               title={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
@@ -182,10 +183,18 @@ const ImmersiveRadio = () => {
 
             <button 
               onClick={playNext}
-              className="p-1.5 text-[#8492a6] hover:text-[#e2a450] hover:scale-105 active:scale-95 transition-all"
+              className="p-1.5 text-[#8492a6] hover:text-[#e2a450] hover:scale-105 active:scale-95 transition-all cursor-pointer"
               title="Next Track"
             >
               <SkipForward size={20} fill="currentColor" />
+            </button>
+
+            <button
+              onClick={openVideoMode}
+              className="p-2 rounded-xl bg-[#141c2e] hover:bg-[#e2a450] text-[#e2a450] hover:text-[#060911] border border-white/10 transition-all shadow-sm cursor-pointer ml-1"
+              title="Watch Fullscreen Video (F)"
+            >
+              <Tv size={16} />
             </button>
           </div>
         </div>

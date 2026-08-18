@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Tv, Coffee, Sparkles, Play, Disc, Music, Flame } from 'lucide-react';
+import { Tv, Coffee, Sparkles, Play, Disc, Music, Flame, Maximize2 } from 'lucide-react';
 import InteractiveRainGlass from '../components/InteractiveRainGlass';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { fallbackSongs } from '../data/fallbackSongs';
 
 const Mumbai = () => {
-  const { playSong, currentSong, isPlaying } = useMusicPlayer();
+  const { playSong, currentSong, isPlaying, openVideoMode } = useMusicPlayer();
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
@@ -82,9 +82,15 @@ const Mumbai = () => {
                       CH 03 • MUMBAI NOSTALGIA
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-700/50 uppercase font-semibold">
-                    ● BROADCAST LIVE
-                  </span>
+                  <button
+                    onClick={openVideoMode}
+                    className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-900/80 px-2.5 py-1 rounded border border-emerald-700/50 uppercase font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                    title="Watch in Fullscreen Retro TV"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>WATCH FULLSCREEN TV</span>
+                    <Maximize2 size={11} className="ml-0.5" />
+                  </button>
                 </div>
 
                 {/* Track Directory inside CRT */}
