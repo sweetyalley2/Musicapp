@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
-import { Search, Play, Pause, Disc, Sparkles, Filter, X } from 'lucide-react';
+import { Search, Play, Pause, Disc, Filter, X, Music } from 'lucide-react';
 import RainCanvas from '../components/RainCanvas';
 import { fallbackSongs } from '../data/fallbackSongs';
 
@@ -25,11 +25,11 @@ const Jukebox = () => {
   }, []);
 
   const moods = useMemo(() => [
-    { id: 'all', label: 'All Songs' },
-    { id: 'nostalgia', label: '🌧️ Monsoon Nostalgia' },
-    { id: 'rain', label: '💧 Rain Melodies' },
-    { id: 'romantic', label: '🌹 90s Romance' },
-    { id: 'party', label: '✨ Retro Party' }
+    { id: 'all', label: 'All Catalog' },
+    { id: 'nostalgia', label: 'Monsoon Nostalgia' },
+    { id: 'rain', label: 'Rain Melodies' },
+    { id: 'romantic', label: '90s Romance' },
+    { id: 'party', label: 'Retro Upbeat' }
   ], []);
 
   const filteredSongs = useMemo(() => {
@@ -37,7 +37,7 @@ const Jukebox = () => {
       const matchesSearch = 
         song.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
         (song.artist && song.artist.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (song.year && song.year.toLowerCase().includes(searchTerm.toLowerCase()));
+        (song.year && song.year.toString().includes(searchTerm.toLowerCase()));
       
       const matchesMood = selectedMood === 'all' || 
         (song.mood && song.mood.toLowerCase() === selectedMood.toLowerCase()) ||
@@ -61,67 +61,67 @@ const Jukebox = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen pt-24 pb-36 px-4 sm:px-6 md:px-12 relative"
+      className="min-h-screen pt-20 pb-36 px-4 sm:px-6 md:px-12 relative bg-[#060911]"
     >
-      <RainCanvas preset="light" />
+      <RainCanvas intensity="light" />
       
       <div className="max-w-6xl mx-auto relative z-10">
         
         {/* Header */}
-        <header className="mb-8 md:mb-12 text-center">
-          <div className="inline-flex items-center gap-2 bg-[#F3C969]/10 text-[#F3C969] px-4 py-1.5 rounded-full border border-[#F3C969]/30 text-xs font-mono font-semibold uppercase tracking-widest mb-4 shadow-md">
-            <Sparkles size={14} />
-            <span>Grand 90s Music Archive</span>
+        <header className="mb-6 md:mb-10 text-center">
+          <div className="inline-flex items-center gap-2 bg-[#141c2e] text-[#e2a450] px-3 py-1 rounded-full border border-white/10 text-[11px] font-mono font-semibold uppercase tracking-wider mb-2 shadow-sm">
+            <Music size={13} />
+            <span>Master Audio Archive</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-vintage font-bold text-[#FFF8EB] mb-3 text-glow">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-vintage font-bold text-[#f4eee2] mb-1.5 tracking-tight">
             The Retro Jukebox
           </h1>
-          <p className="text-sm md:text-base text-[#94A3B8] font-ui max-w-xl mx-auto font-medium">
-            Over {songs.length} timeless melodies from the golden era. Click any cassette or track to play.
+          <p className="text-xs sm:text-base text-[#8492a6] font-ui max-w-xl mx-auto font-normal">
+            Complete catalogue of {songs.length} timeless melodies from the golden era of Bollywood and Bengali music.
           </p>
         </header>
 
         {/* Controls Bar: Search & Mood Filters */}
-        <div className="glass-panel p-4 md:p-6 rounded-3xl mb-8 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="craft-panel p-4 md:p-5 rounded-2xl mb-6 space-y-3 border border-white/10 shadow-xl">
+          <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
             
             {/* Search Input */}
             <div className="relative w-full md:max-w-md">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#F3C969]" size={18} />
+              <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-[#8492a6]" size={15} />
               <input 
                 type="text" 
-                placeholder="Search song title, artist, or movie..." 
+                placeholder="Search song title, artist, or year..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-[#0b0f19]/80 border border-white/15 rounded-2xl py-3 pl-11 pr-10 text-sm text-[#FFF8EB] placeholder-[#94A3B8] focus:outline-none focus:border-[#F3C969] focus:ring-1 focus:ring-[#F3C969] transition-all font-ui shadow-inner"
+                className="w-full bg-[#060911] border border-white/10 rounded-xl py-2 pl-9 pr-8 text-xs text-[#f4eee2] placeholder-[#505c6e] focus:outline-none focus:border-[#e2a450]/60 transition-colors font-mono"
               />
               {searchTerm && (
                 <button 
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#94A3B8] hover:text-[#FFF8EB] p-1"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#8492a6] hover:text-[#f4eee2]"
                 >
-                  <X size={16} />
+                  <X size={14} />
                 </button>
               )}
             </div>
 
             {/* Song Count Badge */}
-            <div className="text-xs font-mono font-semibold text-[#CBD5E1] bg-white/5 px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5 self-end md:self-auto">
-              <Filter size={12} className="text-[#F3C969]" />
-              <span>Showing {filteredSongs.length} tracks</span>
+            <div className="text-[11px] font-mono text-[#8492a6] bg-white/5 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5 self-end md:self-auto">
+              <Filter size={12} className="text-[#e2a450]" />
+              <span>{filteredSongs.length} Tracks</span>
             </div>
           </div>
 
           {/* Mood Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 scrollbar-none">
             {moods.map(mood => (
               <button
                 key={mood.id}
                 onClick={() => setSelectedMood(mood.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all font-ui ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono tracking-wide whitespace-nowrap transition-all border ${
                   selectedMood === mood.id
-                    ? 'bg-[#F3C969] text-[#0b0f19] font-bold shadow-[0_0_15px_rgba(243,201,105,0.4)]'
-                    : 'bg-[#172036]/70 text-[#CBD5E1] hover:text-[#FFF8EB] hover:bg-[#172036] border border-white/10'
+                    ? 'bg-[#e2a450] text-[#060911] font-bold border-[#e2a450] shadow-sm'
+                    : 'bg-[#090d16] text-[#8492a6] hover:text-[#f4eee2] border-white/10 hover:border-white/20'
                 }`}
               >
                 {mood.label}
@@ -131,7 +131,7 @@ const Jukebox = () => {
         </div>
 
         {/* Songs Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 md:gap-4">
           <AnimatePresence>
             {filteredSongs.length > 0 ? (
               filteredSongs.map((song, index) => {
@@ -142,81 +142,79 @@ const Jukebox = () => {
                   <motion.div
                     key={song.id}
                     layout
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.3) }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.2, delay: Math.min(index * 0.015, 0.25) }}
                     onClick={() => handleCardClick(song)}
-                    className={`group cursor-pointer rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 transition-all relative overflow-hidden border ${
+                    className={`group cursor-pointer rounded-xl p-3 flex items-center gap-3 transition-all relative overflow-hidden border ${
                       isSelected
-                        ? 'bg-[#2d1c19]/90 border-[#F3C969] shadow-[0_8px_30px_rgba(243,201,105,0.25)] ring-1 ring-[#F3C969]'
-                        : 'bg-[#111728]/70 hover:bg-[#172036]/90 border-white/10 hover:border-[#F3C969]/40 shadow-lg hover:shadow-xl hover:-translate-y-1'
+                        ? 'bg-[#182030] border-[#e2a450] shadow-md'
+                        : 'bg-[#0e1422]/80 hover:bg-[#141c2e] border-white/[0.08] hover:border-white/20'
                     }`}
                   >
-                    {/* Cover Thumbnail with Play/Pause Overlay */}
-                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-black/60 border border-white/10 flex-shrink-0 shadow-md">
+                    {/* Cover Thumbnail */}
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-[#060911] border border-white/10 flex-shrink-0 shadow-sm">
                       {song.cover ? (
                         <img 
                           src={song.cover} 
                           alt={song.title} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                           loading="lazy"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#2d1c19] to-[#0b0f19] text-[#F3C969]">
-                          <Disc size={28} />
+                        <div className="w-full h-full flex items-center justify-center bg-[#090d16] text-[#e2a450]">
+                          <Disc size={22} />
                         </div>
                       )}
 
-                      {/* Play / Pause button overlay on hover/active */}
+                      {/* Play / Pause overlay */}
                       <div className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity ${
                         isThisPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                       }`}>
-                        <div className="w-8 h-8 rounded-full bg-[#F3C969] text-[#0b0f19] flex items-center justify-center shadow-lg">
+                        <div className="w-6 h-6 rounded-full bg-[#e2a450] text-[#060911] flex items-center justify-center">
                           {isThisPlaying ? (
-                            <Pause size={16} fill="currentColor" />
+                            <Pause size={12} fill="currentColor" />
                           ) : (
-                            <Play size={16} fill="currentColor" className="ml-0.5" />
+                            <Play size={12} fill="currentColor" className="ml-0.5" />
                           )}
                         </div>
                       </div>
                     </div>
 
-                    {/* Track Info (Title, Artist, Badges) */}
+                    {/* Track Details */}
                     <div className="flex-1 min-w-0 pr-1">
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/10 text-[#CBD5E1] border border-white/10 font-semibold">
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-white/5 text-[#8492a6] border border-white/10">
                           {song.year || '90s'}
                         </span>
                         {song.mood && (
-                          <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#F3C969]/10 text-[#F3C969] border border-[#F3C969]/20 font-semibold">
+                          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#e2a450]/10 text-[#e2a450] border border-[#e2a450]/20 uppercase">
                             {song.mood}
                           </span>
                         )}
                       </div>
 
-                      <h3 className={`text-sm sm:text-base font-bold truncate leading-snug tracking-tight ${
-                        isSelected ? 'text-[#F3C969] text-glow' : 'text-[#FFF8EB] group-hover:text-[#F3C969] transition-colors'
+                      <h3 className={`text-xs sm:text-sm font-semibold truncate ${
+                        isSelected ? 'text-[#e2a450]' : 'text-[#f4eee2] group-hover:text-[#e2a450] transition-colors'
                       }`}>
                         {song.title}
                       </h3>
 
-                      <p className="text-xs sm:text-sm text-[#94A3B8] font-medium truncate mt-0.5">
+                      <p className="text-[11px] text-[#8492a6] truncate mt-0.5">
                         {song.artist || 'Classic Melody'}
                       </p>
                     </div>
 
-                    {/* Right Playing Indicator or Arrow */}
+                    {/* Right Playing Indicator */}
                     <div className="flex-shrink-0">
                       {isThisPlaying ? (
-                        <div className="flex items-center gap-0.5 px-2 py-1 rounded-md bg-[#F3C969]/20 border border-[#F3C969]/30">
-                          <span className="w-1 bg-[#F3C969] rounded-full h-3 animate-[pulse_0.6s_infinite]"></span>
-                          <span className="w-1 bg-[#F3C969] rounded-full h-5 animate-[pulse_0.8s_infinite_0.2s]"></span>
-                          <span className="w-1 bg-[#F3C969] rounded-full h-3.5 animate-[pulse_0.5s_infinite_0.4s]"></span>
+                        <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#e2a450]/20 text-[#e2a450] text-[10px] font-mono font-bold">
+                          <span>Playing</span>
                         </div>
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-white/5 group-hover:bg-[#F3C969]/20 text-[#94A3B8] group-hover:text-[#F3C969] flex items-center justify-center transition-colors">
-                          <Play size={12} fill="currentColor" className="ml-0.5" />
+                        <div className="w-6 h-6 rounded-lg bg-white/5 text-[#8492a6] group-hover:text-[#f4eee2] flex items-center justify-center transition-colors">
+                          <Play size={10} fill="currentColor" className="ml-0.5" />
                         </div>
                       )}
                     </div>
@@ -224,15 +222,15 @@ const Jukebox = () => {
                 );
               })
             ) : (
-              <div className="col-span-full py-16 text-center glass-panel rounded-3xl">
-                <Disc size={48} className="mx-auto text-[#F3C969]/40 mb-3" />
-                <h3 className="text-xl font-vintage font-bold text-[#FFF8EB]">No tracks found</h3>
-                <p className="text-sm text-[#94A3B8] mt-1">Try searching for a different song name or artist.</p>
+              <div className="col-span-full py-12 text-center craft-panel rounded-2xl">
+                <Disc size={40} className="mx-auto text-[#8492a6]/40 mb-2" />
+                <h3 className="text-lg font-vintage font-bold text-[#f4eee2]">No matching tracks found</h3>
+                <p className="text-xs text-[#8492a6] mt-1">Try a different title or artist query.</p>
                 <button 
                   onClick={() => { setSearchTerm(''); setSelectedMood('all'); }}
-                  className="mt-4 px-5 py-2 bg-[#F3C969] text-[#0b0f19] rounded-xl text-xs font-bold font-ui uppercase tracking-wider"
+                  className="mt-3 px-4 py-1.5 bg-[#e2a450] text-[#060911] rounded-lg text-xs font-mono font-bold uppercase tracking-wider"
                 >
-                  Clear Filters
+                  Reset Filter
                 </button>
               </div>
             )}
@@ -244,3 +242,4 @@ const Jukebox = () => {
 };
 
 export default Jukebox;
+
