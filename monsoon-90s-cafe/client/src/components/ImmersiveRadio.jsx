@@ -4,7 +4,7 @@ import { SkipForward, SkipBack, Play, Pause, Disc, ListMusic, Radio, Volume2 } f
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { fallbackPlaylists, fallbackSongs } from '../data/fallbackSongs';
 import { formatTime } from './MusicPlayer';
-import RainCanvas from './RainCanvas';
+import InteractiveRainGlass from './InteractiveRainGlass';
 
 const ImmersiveRadio = () => {
   const [isOnline, setIsOnline] = useState(42);
@@ -69,7 +69,7 @@ const ImmersiveRadio = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#060911]/90 via-[#060911]/70 to-[#060911]/95"></div>
       </div>
 
-      <RainCanvas intensity="medium" />
+      <InteractiveRainGlass intensity="medium" />
 
       {/* Top Floating Status Indicators */}
       <div className="relative z-20 w-full max-w-4xl flex items-center justify-between gap-4 mb-4">

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Tv, Coffee, Sparkles, Play, Disc, Music, Flame } from 'lucide-react';
-import RainCanvas from '../components/RainCanvas';
+import InteractiveRainGlass from '../components/InteractiveRainGlass';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { fallbackSongs } from '../data/fallbackSongs';
 
@@ -43,7 +43,7 @@ const Mumbai = () => {
       {/* Background with Ambient Depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0e1422] via-[#090d16] to-[#060911] pointer-events-none"></div>
 
-      <RainCanvas intensity="heavy" />
+      <InteractiveRainGlass intensity="heavy" />
       
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-between">
         

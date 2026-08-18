@@ -1,16 +1,22 @@
 import { motion } from 'framer-motion';
 import { Play, Pause, Disc } from 'lucide-react';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
+import { sfx } from '../utils/soundEffects';
 
 const CassetteCard = ({ playlist, onClick, isActive = false }) => {
   const { isPlaying } = useMusicPlayer();
   const isTapeSpinning = isActive && isPlaying;
 
+  const handleClick = (e) => {
+    sfx.playCassetteInsert();
+    if (onClick) onClick(e);
+  };
+
   return (
     <motion.div 
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
-      onClick={onClick}
+      onClick={handleClick}
       className={`cursor-pointer group relative w-full aspect-[1.7/1] rounded-xl p-2.5 transition-all select-none overflow-hidden ${
         isActive 
           ? 'bg-[#182030] border-2 border-[#e2a450] shadow-[0_12px_28px_rgba(0,0,0,0.8),0_0_20px_rgba(226,164,80,0.2)]' 

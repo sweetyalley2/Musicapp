@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Radio as RadioIcon, Volume2 } from 'lucide-react';
+import { sfx } from '../utils/soundEffects';
 
 // Soft realistic vintage radio static crackle synthesizer using Web Audio API
 const playRadioStatic = () => {

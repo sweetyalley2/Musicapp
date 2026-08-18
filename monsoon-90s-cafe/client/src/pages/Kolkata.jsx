@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Coffee, Radio as RadioIcon, Music, Play, Pause, Search, Sparkles, Disc } from 'lucide-react';
-import RainCanvas from '../components/RainCanvas';
+import InteractiveRainGlass from '../components/InteractiveRainGlass';
 import RadioDial from '../components/RadioDial';
 import CassetteCard from '../components/CassetteCard';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { fallbackPlaylists, fallbackSongs } from '../data/fallbackSongs';
+import { sfx } from '../utils/soundEffects';
 
 const Kolkata = () => {
   const { playSong, currentSong, isPlaying } = useMusicPlayer();
@@ -54,6 +55,7 @@ const Kolkata = () => {
   const [stationIndex, setStationIndex] = useState(0);
 
   const handleChaiClick = () => {
+    sfx.playMechanicalClick();
     setCurrentQuote((prev) => (prev + 1) % quotes.length);
   };
 
@@ -66,6 +68,7 @@ const Kolkata = () => {
   };
 
   const handleTune = () => {
+    sfx.playMechanicalClick();
     setStationIndex((prev) => (prev + 1) % RADIO_STATIONS.length);
     const pool = activeSongs.length > 0 ? activeSongs : fallbackSongs;
     const remaining = pool.filter(s => s.id !== currentSong?.id);
@@ -98,7 +101,7 @@ const Kolkata = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#060911]/85 via-[#060911]/60 to-[#060911]/95"></div>
       </div>
 
-      <RainCanvas intensity="medium" />
+      <InteractiveRainGlass intensity="medium" />
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-between">
         

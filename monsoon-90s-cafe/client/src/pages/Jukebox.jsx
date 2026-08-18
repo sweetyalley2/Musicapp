@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { Search, Play, Pause, Disc, Filter, X, Music } from 'lucide-react';
-import RainCanvas from '../components/RainCanvas';
+import InteractiveRainGlass from '../components/InteractiveRainGlass';
 import { fallbackSongs } from '../data/fallbackSongs';
 
 const Jukebox = () => {
@@ -63,7 +63,7 @@ const Jukebox = () => {
       transition={{ duration: 0.5 }}
       className="min-h-screen pt-20 pb-36 px-4 sm:px-6 md:px-12 relative bg-[#060911]"
     >
-      <RainCanvas intensity="light" />
+      <InteractiveRainGlass intensity="light" />
       
       <div className="max-w-6xl mx-auto relative z-10">
         
