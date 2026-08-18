@@ -10,9 +10,9 @@ export const MusicProvider = ({ children }) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.7);
+  const [volume, setVolume] = useState(0.75);
   const [isMuted, setIsMuted] = useState(false);
-  const [prevVolume, setPrevVolume] = useState(0.7);
+  const [prevVolume, setPrevVolume] = useState(0.75);
   const [playlist, setPlaylist] = useState(fallbackSongs || []);
   const [error, setError] = useState(null);
   const [isShuffle, setIsShuffle] = useState(false);
@@ -20,17 +20,24 @@ export const MusicProvider = ({ children }) => {
   const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   const playerRef = useRef(null);
+  const playerInstanceRef = useRef(null);
+  const pendingPlayRef = useRef(null);
   const isSeekingRef = useRef(false);
+
+  const getPlayer = () => {
+    return playerInstanceRef.current || playerRef.current?.internalPlayer || null;
+  };
 
   // Sync volume with YouTube internal player
   const applyVolume = useCallback(async (vol, muted) => {
-    if (!playerRef.current?.internalPlayer) return;
+    const player = getPlayer();
+    if (!player) return;
     try {
       if (muted || vol === 0) {
-        await playerRef.current.internalPlayer.mute();
+        if (typeof player.mute === 'function') await player.mute();
       } else {
-        await playerRef.current.internalPlayer.unMute();
-        await playerRef.current.internalPlayer.setVolume(Math.round(vol * 100));
+        if (typeof player.unMute === 'function') await player.unMute();
+        if (typeof player.setVolume === 'function') await player.setVolume(Math.round(vol * 100));
       }
     } catch (e) {
       // Ignore API errors before full initialization
@@ -40,15 +47,19 @@ export const MusicProvider = ({ children }) => {
   // Update progress every 350ms when playing
   useEffect(() => {
     let progressInterval;
-    if (isPlaying && playerRef.current?.internalPlayer && !isSeekingRef.current) {
+    if (isPlaying && !isSeekingRef.current) {
       progressInterval = setInterval(async () => {
+        const player = getPlayer();
+        if (!player) return;
         try {
-          const cur = await playerRef.current.internalPlayer.getCurrentTime();
-          const dur = await playerRef.current.internalPlayer.getDuration();
-          if (dur && dur > 0) {
-            setCurrentTime(cur);
-            setDuration(dur);
-            setProgress((cur / dur) * 100);
+          if (typeof player.getCurrentTime === 'function' && typeof player.getDuration === 'function') {
+            const cur = await player.getCurrentTime();
+            const dur = await player.getDuration();
+            if (dur && dur > 0) {
+              setCurrentTime(cur);
+              setDuration(dur);
+              setProgress((cur / dur) * 100);
+            }
           }
         } catch (e) {
           // Ignore
@@ -65,11 +76,13 @@ export const MusicProvider = ({ children }) => {
       setPlaylist(newPlaylist);
     }
 
+    const player = getPlayer();
+
     // Toggle same song (Play/Pause resume at exact position)
-    if (currentSong && currentSong.id === song.id && playerRef.current?.internalPlayer) {
+    if (currentSong && currentSong.id === song.id && player) {
       try {
         if (isPlaying) {
-          await playerRef.current.internalPlayer.pauseVideo();
+          if (typeof player.pauseVideo === 'function') await player.pauseVideo();
           setIsPlaying(false);
         } else {
           if (!song.youtubeId) {
@@ -77,7 +90,7 @@ export const MusicProvider = ({ children }) => {
             setIsPlaying(false);
             return;
           }
-          await playerRef.current.internalPlayer.playVideo();
+          if (typeof player.playVideo === 'function') await player.playVideo();
           setIsPlaying(true);
         }
       } catch (e) {
@@ -98,19 +111,35 @@ export const MusicProvider = ({ children }) => {
       return;
     }
 
-    if (playerRef.current?.internalPlayer) {
+    if (player) {
       try {
-        await playerRef.current.internalPlayer.loadVideoById({
-          videoId: song.youtubeId,
-          startSeconds: 0
-        });
+        if (typeof player.loadVideoById === 'function') {
+          await player.loadVideoById({
+            videoId: song.youtubeId,
+            startSeconds: 0
+          });
+        }
         await applyVolume(volume, isMuted);
-        await playerRef.current.internalPlayer.playVideo();
+        if (typeof player.playVideo === 'function') {
+          await player.playVideo();
+        }
         setIsPlaying(true);
       } catch (e) {
-        setError("Failed to load audio");
-        setIsPlaying(false);
+        // Fallback simple load
+        try {
+          if (typeof player.loadVideoById === 'function') {
+            player.loadVideoById(song.youtubeId);
+            player.playVideo();
+            setIsPlaying(true);
+          }
+        } catch (err2) {
+          setError("Failed to load audio");
+          setIsPlaying(false);
+        }
       }
+    } else {
+      // Player not ready yet; queue for when ready
+      pendingPlayRef.current = { song, playlist: newPlaylist };
     }
   };
 
@@ -122,14 +151,18 @@ export const MusicProvider = ({ children }) => {
       return;
     }
 
-    if (!playerRef.current?.internalPlayer) return;
+    const player = getPlayer();
+    if (!player) {
+      pendingPlayRef.current = { song: currentSong };
+      return;
+    }
 
     try {
       if (isPlaying) {
-        await playerRef.current.internalPlayer.pauseVideo();
+        if (typeof player.pauseVideo === 'function') await player.pauseVideo();
         setIsPlaying(false);
       } else {
-        await playerRef.current.internalPlayer.playVideo();
+        if (typeof player.playVideo === 'function') await player.playVideo();
         setIsPlaying(true);
       }
     } catch (e) {
@@ -141,9 +174,10 @@ export const MusicProvider = ({ children }) => {
     if (playlist.length === 0 || !currentSong) return;
 
     if (repeatMode === 'one') {
-      if (playerRef.current?.internalPlayer) {
-        playerRef.current.internalPlayer.seekTo(0, true);
-        playerRef.current.internalPlayer.playVideo();
+      const player = getPlayer();
+      if (player && typeof player.seekTo === 'function') {
+        player.seekTo(0, true);
+        if (typeof player.playVideo === 'function') player.playVideo();
         setIsPlaying(true);
       }
       return;
@@ -178,7 +212,8 @@ export const MusicProvider = ({ children }) => {
     if (playlist.length === 0 || !currentSong) return;
 
     // If current song is > 3 seconds in, jump to start
-    if (currentTime > 3 && playerRef.current?.internalPlayer) {
+    const player = getPlayer();
+    if (currentTime > 3 && player && typeof player.seekTo === 'function') {
       seekTo(0);
       return;
     }
@@ -189,10 +224,11 @@ export const MusicProvider = ({ children }) => {
   };
 
   const seekTo = (seconds) => {
-    if (playerRef.current?.internalPlayer) {
+    const player = getPlayer();
+    if (player && typeof player.seekTo === 'function') {
       try {
         const safeSeconds = Math.max(0, Math.min(seconds, duration || seconds));
-        playerRef.current.internalPlayer.seekTo(safeSeconds, true);
+        player.seekTo(safeSeconds, true);
         setCurrentTime(safeSeconds);
         if (duration > 0) {
           setProgress((safeSeconds / duration) * 100);
@@ -215,7 +251,7 @@ export const MusicProvider = ({ children }) => {
   const toggleMute = () => {
     if (isMuted) {
       setIsMuted(false);
-      const restoreVol = prevVolume > 0 ? prevVolume : 0.5;
+      const restoreVol = prevVolume > 0 ? prevVolume : 0.75;
       setVolume(restoreVol);
       applyVolume(restoreVol, false);
     } else {
@@ -237,17 +273,26 @@ export const MusicProvider = ({ children }) => {
   };
 
   const closePlayer = () => {
-    if (playerRef.current?.internalPlayer) {
+    const player = getPlayer();
+    if (player && typeof player.stopVideo === 'function') {
       try {
-        playerRef.current.internalPlayer.stopVideo();
+        player.stopVideo();
       } catch (e) {}
     }
     setIsPlaying(false);
   };
 
   const onPlayerReady = (event) => {
+    playerInstanceRef.current = event.target;
     setIsPlayerReady(true);
     applyVolume(volume, isMuted);
+
+    // If there was a pending song to play, execute now
+    if (pendingPlayRef.current) {
+      const { song, playlist: newPlaylist } = pendingPlayRef.current;
+      pendingPlayRef.current = null;
+      playSong(song, newPlaylist);
+    }
   };
 
   const onPlayerStateChange = (event) => {
@@ -268,8 +313,11 @@ export const MusicProvider = ({ children }) => {
 
   const onPlayerError = (event) => {
     // 2: invalid parameter, 5: html5 error, 100: not found, 101/150: restricted embed
-    if (event.data !== 150 && event.data !== 101) {
-      setError("Audio playback error");
+    if (event.data === 101 || event.data === 150) {
+      // restricted embed, auto advance
+      playNext();
+    } else {
+      setError("Audio stream connecting...");
     }
   };
 
@@ -299,8 +347,8 @@ export const MusicProvider = ({ children }) => {
   };
 
   const opts = {
-    height: '100',
-    width: '100',
+    height: '160',
+    width: '160',
     playerVars: {
       autoplay: 0,
       controls: 0,
@@ -315,18 +363,19 @@ export const MusicProvider = ({ children }) => {
   return (
     <MusicContext.Provider value={contextValue}>
       {children}
-      {/* Hidden YouTube iframe for pure audio streaming */}
+      {/* Hidden YouTube iframe for pure audio streaming, sized to prevent browser suspension */}
       <div 
         aria-hidden="true" 
         style={{ 
           position: 'fixed', 
-          top: '-9999px', 
-          left: '-9999px', 
-          width: '1px', 
-          height: '1px', 
-          overflow: 'hidden', 
-          opacity: 0, 
-          pointerEvents: 'none' 
+          bottom: 0, 
+          right: 0, 
+          width: '160px', 
+          height: '160px', 
+          opacity: 0.001, 
+          pointerEvents: 'none',
+          zIndex: -1,
+          overflow: 'hidden'
         }}
       >
         <YouTube
@@ -341,3 +390,4 @@ export const MusicProvider = ({ children }) => {
     </MusicContext.Provider>
   );
 };
+

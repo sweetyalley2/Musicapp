@@ -62,14 +62,14 @@ const ImmersiveRadio = () => {
   return (
     <div className="relative min-h-[calc(100vh-80px)] w-full flex flex-col items-center justify-center overflow-hidden text-[#FFF8EB] pt-20 pb-36 px-4">
       
-      {/* High Quality Howrah Bridge Rainy Background */}
-      <div className="absolute inset-0 z-0">
+      {/* High Quality Kolkata Rainy Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
-          src="/bg-kolkata-howrah.jpg" 
-          alt="Kolkata Howrah Bridge in Rain"
-          className="w-full h-full object-cover filter brightness-[0.4] contrast-125"
+          src="/bg-kolkata-rain.jpg" 
+          alt="Kolkata Monsoon with Rain"
+          className="w-full h-full object-cover filter brightness-[0.55] contrast-115 scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f19]/90 via-black/50 to-[#0b0f19]/95 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f19]/80 via-[#0b0f19]/40 to-[#0b0f19]/95 backdrop-blur-[1px]"></div>
       </div>
 
       {/* Top Floating Badges (Clock & Live Listeners) */}
@@ -101,7 +101,7 @@ const ImmersiveRadio = () => {
       {/* Centerpiece: Vintage Kolkata Radio Player */}
       <div className="relative z-20 w-full max-w-3xl flex flex-col items-center text-center my-auto py-4">
         
-        <div className="inline-flex items-center gap-2 bg-[#F3C969]/15 text-[#F3C969] px-4 py-1.5 rounded-full border border-[#F3C969]/30 text-xs font-mono font-semibold uppercase tracking-widest mb-4 shadow-lg">
+        <div className="inline-flex items-center gap-2 bg-[#F3C969]/15 text-[#F3C969] px-4 py-1.5 rounded-full border border-[#F3C969]/30 text-xs font-mono font-semibold uppercase tracking-widest mb-4 shadow-lg backdrop-blur-md">
           <Sparkles size={14} />
           <span>Akashvani Kolkata 90s Live</span>
         </div>
@@ -109,7 +109,7 @@ const ImmersiveRadio = () => {
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-vintage font-bold text-[#FFF8EB] tracking-wider mb-2 text-glow">
           Rainy Radio
         </h1>
-        <p className="text-sm sm:text-base text-[#94A3B8] font-ui font-medium max-w-md mb-8">
+        <p className="text-sm sm:text-base text-[#CBD5E1] font-ui font-medium max-w-md mb-8">
           Sit back with warm chai and listen to the uninterrupted rain broadcast.
         </p>
 
@@ -135,7 +135,7 @@ const ImmersiveRadio = () => {
         </div>
 
         {/* Current Track Info Panel */}
-        <div className="w-full max-w-lg glass-panel p-5 sm:p-6 rounded-3xl border-t border-[#F3C969]/30 shadow-2xl space-y-4">
+        <div className="w-full max-w-lg glass-panel p-5 sm:p-6 rounded-3xl border-t border-[#F3C969]/30 shadow-2xl space-y-4 backdrop-blur-xl">
           <div>
             <h2 className="text-xl sm:text-2xl font-vintage font-bold text-[#FFF8EB] truncate text-backdrop">
               {currentSong?.title || 'Monsoon Melodies'}

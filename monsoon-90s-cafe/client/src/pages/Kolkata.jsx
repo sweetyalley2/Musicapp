@@ -44,6 +44,14 @@ const Kolkata = () => {
     }
   }, [activePlaylistId, playlists]);
 
+  const RADIO_STATIONS = [
+    { freq: '98.3 FM', title: 'Akashvani Kolkata' },
+    { freq: '102.6 FM', title: 'Vividh Bharati' },
+    { freq: '91.9 FM', title: 'Kolkata Gold' },
+    { freq: '107.0 FM', title: 'AIR Bangla' },
+  ];
+  const [stationIndex, setStationIndex] = useState(0);
+
   const handleChaiClick = () => {
     setCurrentQuote((prev) => (prev + 1) % quotes.length);
   };
@@ -57,10 +65,13 @@ const Kolkata = () => {
   };
 
   const handleTune = () => {
-    // Tune radio effect: switch to a random track from active playlist
-    if (activeSongs.length > 0) {
-      const rand = activeSongs[Math.floor(Math.random() * activeSongs.length)];
-      playSong(rand, activeSongs);
+    // Tune radio effect: advance station and switch to a random track from active playlist
+    setStationIndex((prev) => (prev + 1) % RADIO_STATIONS.length);
+    const pool = activeSongs.length > 0 ? activeSongs : fallbackSongs;
+    const remaining = pool.filter(s => s.id !== currentSong?.id);
+    const selected = remaining.length > 0 ? remaining[Math.floor(Math.random() * remaining.length)] : pool[0];
+    if (selected) {
+      playSong(selected, pool);
     }
   };
 
@@ -72,14 +83,14 @@ const Kolkata = () => {
       transition={{ duration: 0.6 }}
       className="relative min-h-screen pt-24 pb-36 px-4 sm:px-6 md:px-12 bg-[#080d1a]"
     >
-      {/* Background Image with High-Contrast Dark Gradient Overlay */}
-      <div className="absolute inset-0 z-0">
+      {/* Background Image: High Quality Kolkata with Rain & Yellow Cab */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
-          src="/bg-kolkata-howrah.jpg" 
-          alt="Kolkata Rainy Streets" 
-          className="w-full h-full object-cover opacity-25 filter brightness-75 contrast-125"
+          src="/bg-kolkata-rain.jpg" 
+          alt="Kolkata Monsoon with Rain and Yellow Taxi" 
+          className="w-full h-full object-cover opacity-60 filter brightness-[0.72] contrast-115 scale-105 transition-transform duration-1000"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f19] via-[#080d1a]/85 to-[#0b0f19]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080d1a]/80 via-[#080d1a]/45 to-[#080d1a]/95 pointer-events-none"></div>
       </div>
 
       <RainCanvas preset="kolkata" />
@@ -88,14 +99,14 @@ const Kolkata = () => {
         
         {/* Page Header */}
         <header className="mb-8 md:mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#F3C969]/10 text-[#F3C969] px-3.5 py-1.5 rounded-full border border-[#F3C969]/30 text-xs font-mono font-semibold uppercase tracking-widest mb-3 shadow-md">
+          <div className="inline-flex items-center gap-2 bg-[#F3C969]/15 text-[#F3C969] px-3.5 py-1.5 rounded-full border border-[#F3C969]/30 text-xs font-mono font-semibold uppercase tracking-widest mb-3 shadow-md backdrop-blur-md">
             <Sparkles size={13} />
             <span>Kolkata 90s Monsoon Edition</span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-vintage font-bold text-[#FFF8EB] mb-2 text-glow">
             Kolkata Nights
           </h1>
-          <p className="text-sm md:text-lg text-[#94A3B8] font-ui max-w-2xl font-medium">
+          <p className="text-sm md:text-lg text-[#CBD5E1] font-ui max-w-2xl font-medium">
             Old radios, yellow cabs, roadside chai stalls, and immortal Bengali & Hindi 90s melodies.
           </p>
         </header>
@@ -107,22 +118,33 @@ const Kolkata = () => {
           <div className="lg:col-span-4 flex flex-col gap-6">
             
             {/* Vintage Radio Tuner Box */}
-            <div className="glass-panel p-6 rounded-3xl border-t border-[#F3C969]/30 flex flex-col items-center text-center shadow-2xl">
-              <div className="flex items-center gap-2 text-[#F3C969] mb-4">
+            <div className="glass-panel p-6 rounded-3xl border-t border-[#F3C969]/40 flex flex-col items-center text-center shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center gap-2 text-[#F3C969] mb-2">
                 <RadioIcon size={20} />
                 <h3 className="font-vintage font-bold text-xl text-[#FFF8EB]">
                   Tune The Radio
                 </h3>
               </div>
-              <p className="text-xs text-[#94A3B8] mb-6 max-w-xs font-ui">
-                Rotate the knob to tune into nostalgic frequencies across Akashvani Kolkata.
+              <p className="text-xs text-[#94A3B8] mb-4 max-w-xs font-ui">
+                Rotate knob or click buttons to tune into nostalgia frequencies across Kolkata.
               </p>
               
-              <RadioDial onTune={handleTune} />
+              <RadioDial 
+                onTune={handleTune} 
+                currentFrequency={RADIO_STATIONS[stationIndex].freq}
+                isPlaying={isPlaying}
+              />
               
-              <span className="mt-5 text-[11px] font-mono text-[#F3C969] bg-[#F3C969]/10 px-3 py-1 rounded-full border border-[#F3C969]/20 font-bold uppercase tracking-wider">
-                98.3 FM • Nostalgia Wave
-              </span>
+              <div className="mt-4 flex flex-col items-center gap-1">
+                <span className="text-[11px] font-mono text-[#F3C969] bg-[#F3C969]/15 px-3.5 py-1 rounded-full border border-[#F3C969]/30 font-bold uppercase tracking-wider shadow-sm">
+                  {RADIO_STATIONS[stationIndex].freq} • {RADIO_STATIONS[stationIndex].title}
+                </span>
+                {isPlaying && currentSong && (
+                  <p className="text-xs text-[#FFF8EB] font-vintage truncate max-w-[240px] mt-1">
+                    ♪ {currentSong.title}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Chai & Kolkata Quote Box */}

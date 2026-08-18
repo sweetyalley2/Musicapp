@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd monsoon-90s-cafe/client && npm install && npm run build",
+  "outputDirectory": "monsoon-90s-cafe/client/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
